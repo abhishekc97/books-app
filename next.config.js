@@ -1,4 +1,11 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
+const dotenv = require("dotenv");
+dotenv.config();
 
-module.exports = nextConfig
+const nextConfig = {
+    env: {
+        BACKEND_URL: process.env.BACKEND_URL,
+    },
+};
+
+module.exports = nextConfig;
