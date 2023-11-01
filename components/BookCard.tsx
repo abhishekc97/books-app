@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PopupDefault from './PopupDefault';
 import EditBookPopup from './EditBookPopup';
 import DeleteBookPopup from './DeleteBookPopup';
@@ -30,6 +30,8 @@ export default function BookCard({
 	const [showEditPopup, setShowEditPopup] = useState(false);
 	const [showDeletePopup, setShowDeletePopup] = useState(false);
 
+	const [randomColor, setRandomColor] = useState('');
+
 	// Show the Edit Book popup and dropdown
 	const handleEditClick = () => {
 		setShowDropdown(false);
@@ -41,10 +43,6 @@ export default function BookCard({
 		setShowDropdown(false);
 		setShowDeletePopup(true);
 	};
-
-	// Randomly select a color from the lightShadedColors array
-	const randomColor =
-		lightShadedColors[Math.floor(Math.random() * lightShadedColors.length)];
 
 	// style descriptor for the book description
 	const descriptionStyle = {
@@ -65,6 +63,15 @@ export default function BookCard({
 		setShowEditPopup(false);
 		setShowDeletePopup(false);
 	};
+
+	// Randomly select a color from the lightShadedColors array
+	useEffect(() => {
+		const color =
+			lightShadedColors[
+				Math.floor(Math.random() * lightShadedColors.length)
+			];
+		setRandomColor(color);
+	}, []);
 
 	return (
 		<div

@@ -32,7 +32,7 @@ export default function PaginationControls({
 			</button>
 
 			<div>
-				{page} / {Math.ceil(15 / Number(per_page))}
+				{page} / {Math.ceil(10 / Number(per_page))}
 			</div>
 
 			<button
