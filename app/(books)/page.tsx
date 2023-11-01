@@ -13,6 +13,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 interface Book {
+	_id: any;
 	title: string;
 	author: string;
 	publication: string;
@@ -62,7 +63,7 @@ export default function BooksPage({
 	};
 
 	// handler for updating books list
-	function handleBookCreateSuccess() {
+	function handleBookChangeSuccess() {
 		getAllBooks();
 	}
 
@@ -95,13 +96,10 @@ export default function BooksPage({
 			{/* Grid layout for showing books */}
 			<div className="booksContainer grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 lg:h-[632px] mx-auto mb-8">
 				{entries.map((book, index) => (
-					<div key={index} className="p-4">
+					<div key={book._id} className="p-4">
 						<BookCard
-							title={book.title}
-							author={book.author}
-							publication={book.publication}
-							isbn={book.isbn}
-							description={book.description}
+							book={book}
+							handleBookChangeSuccess={handleBookChangeSuccess}
 						/>
 					</div>
 				))}
@@ -113,7 +111,7 @@ export default function BooksPage({
 			{showPopup && (
 				<PopupDefault closePopup={handleClosePopup}>
 					<AddBookPopup
-						handleBookCreateSuccess={handleBookCreateSuccess}
+						handleBookCreateSuccess={handleBookChangeSuccess}
 						closePopup={handleClosePopup}
 					/>
 				</PopupDefault>

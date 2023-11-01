@@ -5,7 +5,6 @@ const URL = process.env.BACKEND_URL;
 export async function getAllBooksAPI() {
 	try {
 		const reqUrl = `${URL}/api/books/all`;
-
 		const result = await axios.get(reqUrl);
 		if (result) {
 			return result.data;
@@ -36,5 +35,33 @@ export async function createBookAPI(body: any) {
 		if (result) {
 			return result;
 		}
-	} catch (error) {}
+	} catch (error) {
+		console.log(error);
+	}
+}
+
+// PUT API call to create a new book
+export async function updateBookByIdAPI(id: any, body: any) {
+	try {
+		const reqUrl = `${URL}/api/books/update/${id}`;
+		const result = await axios.put(reqUrl, body);
+		if (result) {
+			return result;
+		}
+	} catch (error) {
+		console.log(error);
+	}
+}
+
+// DELETE API to delete a book
+export async function deleteBookByIdAPI(id: any) {
+	try {
+		const reqUrl = `${URL}/api/books/delete/${id}`;
+		const result = await axios.delete(reqUrl);
+		if (result) {
+			return result;
+		}
+	} catch (error) {
+		console.log(error);
+	}
 }

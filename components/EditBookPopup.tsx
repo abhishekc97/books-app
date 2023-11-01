@@ -1,10 +1,9 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Form } from 'react-bootstrap';
 import { toast } from 'react-toastify';
-import { createBookAPI } from '@/utils/booksAPI';
+import { getBookByIdAPI, updateBookByIdAPI } from '@/utils/booksAPI';
 
-// book schema interface
 interface Book {
 	title: string;
 	author: string;
@@ -13,30 +12,43 @@ interface Book {
 	description: string;
 }
 
-export default function AddBookPopup({
-	handleBookCreateSuccess,
+export default function EditBookPopup({
+	book,
+	handleBookEditSuccess,
 	closePopup
 }: {
-	handleBookCreateSuccess: () => void;
+	book: any;
+	handleBookEditSuccess: () => void;
 	closePopup: () => void;
 }) {
-	// book state
-	const [book, setBook] = useState<Book>({
+	// book states
+	const bookId = book._id;
+	const [bookData, setBookData] = useState<Book>({
 		title: '',
 		author: '',
 		publication: '',
 		isbn: '',
 		description: ''
 	});
-
 	// error message
 	const [errorMessage, setErrorMessage] = useState('');
 
-	// form change handler
+	// get book details
+	async function getBookDetails() {
+		const id = book._id;
+		if (book._id) {
+			const result = await getBookByIdAPI(id);
+			if (result) {
+				setBookData({ ...result });
+			}
+		}
+	}
+
+	// change handler
 	function handleChange(event: any) {
 		const { name, value } = event.target as HTMLInputElement;
-		setBook({
-			...book,
+		setBookData({
+			...bookData,
 			[name]: value
 		});
 	}
@@ -44,9 +56,9 @@ export default function AddBookPopup({
 	// form validation
 	function validateForm() {
 		if (
-			book.title === null ||
-			book.title === undefined ||
-			book.title === ''
+			bookData.title === null ||
+			bookData.title === undefined ||
+			bookData.title === ''
 		) {
 			setErrorMessage('Name field is required.');
 			return false;
@@ -61,20 +73,26 @@ export default function AddBookPopup({
 		if (!validateForm()) {
 			return;
 		}
-		const result = await createBookAPI(book);
+
+		const result = await updateBookByIdAPI(bookId, bookData);
 		if (result?.status === 200) {
-			handleBookCreateSuccess();
-			toast.success('Added new book!', {
+			handleBookEditSuccess();
+			toast.success('Updated new book!', {
 				position: toast.POSITION.TOP_CENTER
 			});
 			closePopup();
 		} else {
-			toast.error('Could not add book', {
+			toast.error('Could not update book', {
 				position: toast.POSITION.TOP_CENTER
 			});
 			closePopup();
 		}
 	}
+
+	// get book details on first loading
+	useEffect(() => {
+		getBookDetails();
+	}, []);
 
 	return (
 		<>
@@ -83,7 +101,7 @@ export default function AddBookPopup({
 				className="rounded-xl flex flex-col gap-4 overflow-hidden items-center"
 			>
 				<span className="font-semibold text-lg text-center w-[50%]">
-					Create a Book
+					Edit Book
 				</span>
 				<div className="formInnerContainer flex flex-col items-start px-4">
 					<div className="inpBox flex gap-8 items-center">
@@ -92,7 +110,7 @@ export default function AddBookPopup({
 							type="text"
 							name="title"
 							placeholder="Name"
-							value={book.title}
+							value={bookData.title}
 							onChange={handleChange}
 							className="m-4 w-64"
 						/>
@@ -107,7 +125,7 @@ export default function AddBookPopup({
 							type="text"
 							name="author"
 							placeholder="Author"
-							value={book.author}
+							value={bookData.author}
 							onChange={handleChange}
 							className="m-4 w-64"
 						/>
@@ -119,7 +137,7 @@ export default function AddBookPopup({
 							type="text"
 							name="publication"
 							placeholder="Publication"
-							value={book.publication}
+							value={bookData.publication}
 							onChange={handleChange}
 							className="m-4 w-64"
 						/>
@@ -131,7 +149,7 @@ export default function AddBookPopup({
 							type="text"
 							name="isbn"
 							placeholder="ISBN"
-							value={book.isbn}
+							value={bookData.isbn}
 							onChange={handleChange}
 							className="m-4 w-64"
 						/>
@@ -143,7 +161,7 @@ export default function AddBookPopup({
 							type="text"
 							name="description"
 							placeholder="Description"
-							value={book.description}
+							value={bookData.description}
 							onChange={handleChange}
 							className="m-4 w-64"
 						/>
