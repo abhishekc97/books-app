@@ -65,3 +65,17 @@ export async function deleteBookByIdAPI(id: any) {
 		console.log(error);
 	}
 }
+
+// GET API for searching book by title, author and description
+export async function searchBookAPI(queryString: any) {
+	try {
+		console.log(queryString);
+		const reqUrl = `${URL}/api/books/search/query?query=${queryString}`;
+		const results = await axios.get(reqUrl);
+		if (results) {
+			return results;
+		}
+	} catch (error) {
+		console.log(error);
+	}
+}
